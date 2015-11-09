@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2015.2.1 (Build 705U)" ts="2015-10-27 13:19:32">
+<Class name="SN.DefaultInstaller">
+<Super>%RegisteredObject</Super>
+<TimeChanged>63852,47866.843237</TimeChanged>
+<TimeCreated>63852,47866.843237</TimeCreated>
+
+<XData name="SNInstall">
+<XMLNamespace>INSTALLER</XMLNamespace>
+<Data><![CDATA[
+<Manifest>
+	<SystemSetting Name="Config.config.MaxServers"  Value="64"/>      
+	<SystemSetting Name="Config.config.MaxServerConn"  Value="64"/>      
+	<SystemSetting Name="Config.SQL.SaveMAC"  Value="1"/>      
+
+	<Namespace Name="%SYS">
+         <Invoke Class="SN.DefaultInstaller" Method="EnableECPService" CheckStatus="1"/>
+      </Namespace>
+   </Manifest>
+]]></Data>
+</XData>
+
+<Method name="EnableECPService">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ //w ##class(Security.Services).Get("%Service_ECP",.props)
+ s props("Enabled")=1
+ s sc=##class(Security.Services).Modify("%Service_ECP",.props)
+ quit sc
+]]></Implementation>
+</Method>
+
+<Method name="setup">
+<Internal>1</Internal>
+<ClassMethod>1</ClassMethod>
+<CodeMode>objectgenerator</CodeMode>
+<FormalSpec><![CDATA[&pVars,pLogLevel:%Integer=3,pInstaller:%Installer.Installer,pLogger:%Installer.AbstractLogger]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+   #; Let XGL document generate code for this method. 
+   Quit ##class(%Installer.Manifest).%Generate(%compiledclass,%code, "SNInstall")
+]]></Implementation>
+</Method>
+</Class>
+</Export>
