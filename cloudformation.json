@@ -44,7 +44,7 @@
       "SIDEKICK1" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "Tags":[{"Key":"Name", "Value":"SHARD1"}],
+        "Tags":[{"Key":"Name", "Value":"SIDEKICK1"}],
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "KeyName" : "mykey",
         "ImageId" : "ami-a25415cb",
@@ -59,7 +59,7 @@
       "SIDEKICK2" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "Tags":[{"Key":"Name", "Value":"SHARD2"}],
+        "Tags":[{"Key":"Name", "Value":"SIDEKICK2"}],
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "KeyName" : "mykey",
         "ImageId" : "ami-a25415cb",
