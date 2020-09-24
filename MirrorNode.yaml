@@ -2,8 +2,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Metadata:
     Author: Anton Umnikov
-    Last Updated: August 12, 2020
+    Last Updated: September 23, 2020
     Description: IRIS Mirror Node
+    #aws s3 cp MirrorNode.yaml s3://isc-tech-validation --acl public-read
 
 Mappings:
 
@@ -210,7 +211,9 @@ Resources:
            ISC_INSTALLER_MANIFEST="/tmp/irisdistr/MirrorInstaller.xml" \
            ISC_PACKAGE_INITIAL_SECURITY="Normal" \
            ISC_PACKAGE_USER_PASSWORD="${ConfigIRISPassword}" \
-           ISC_INSTALLER_PARAMETERS="ConfigGlobalBuffers=${ConfigGlobalBuffers}" \
+           ISC_INSTALLER_PARAMETERS="ConfigGlobalBuffers=${ConfigGlobalBuffers}\
+           ,ConfigGMHeap=${ConfigGMHeap}\
+           ,ConfigLockTable=${ConfigLockTable}" \
            ./irisinstall_silent &&
            cd .. &&
            sudo cp iris.key /iris/sys/mgr &&
@@ -229,6 +232,8 @@ Resources:
            iris session iris -U\%SYS "$IRIS_COMMAND_CREATE_DB"
          - {
            ConfigGlobalBuffers: !FindInMap [IRISParametersMap, !Ref InstanceTypeParameter, GlobalBuffers],
+           ConfigGMHeap: !FindInMap [IRISParametersMap, !Ref InstanceTypeParameter, gmheap],
+           ConfigLockTable: !FindInMap [IRISParametersMap, !Ref InstanceTypeParameter, LockTable],
            ConfigIRISPassword: !Ref IRISPasswordParameter,
            ConfigS3BucketName: !Ref S3BucketNameParameter,
            MirrorInstanceRole: !Ref MirrorInstanceRole,

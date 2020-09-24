@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class JDBCSample {
     public static void main(String[] str) throws Exception {
-        String url = "jdbc:IRIS://anton-004-NLB-a28a445049b16d48.elb.us-east-1.amazonaws.com:51773/DATA";
+        String url = "jdbc:IRIS://tCaT-LoadB-A12MQU7BB0WI-65cbb7ddc08cf759.elb.us-east-1.amazonaws.com:51773/DATA";
 
         Class.forName("com.intersystems.jdbc.IRISDriver");
         Connection connection = DriverManager.getConnection(url,"_SYSTEM","demo");
