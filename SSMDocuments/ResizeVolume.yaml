@@ -1,0 +1,55 @@
+---
+description: Resize EBS volume on EC2 instance
+schemaVersion: '0.3'
+assumeRole: '{{ AutomationAssumeRole }}'
+parameters:
+  InstanceId:
+    type: String
+    description: (Required) The Id of the instance
+  VolumeId:
+    type: String
+    description: Volume ID to resize
+  NewSize:
+    type: Integer
+    description: Desired volume size in GB
+  VolumeMount:
+    type: String
+    description: Linux Mount point for the volume
+  AutomationAssumeRole:
+    type: String
+    description: (Optional) The ARN of the role that allows Automation to perform the actions on your behalf.
+    default: ''
+mainSteps:
+  - name: resizeVolume
+    action: 'aws:executeAwsApi'
+    inputs:
+      Service: EC2
+      Api: ModifyVolume
+      VolumeId: '{{VolumeId}}'
+      Size: '{{NewSize}}'
+  - name: wait
+    action: 'aws:sleep'
+    inputs:
+      Duration: PT30S
+  - name: waitUntilVolumeStateRunning
+    action: aws:waitForAwsResourceProperty
+    # timeout is strongly encouraged for action - aws:waitForAwsResourceProperty
+    timeoutSeconds: 60
+    inputs:
+      Service: ec2
+      Api: DescribeVolumeStatus
+      VolumeIds:
+      - "{{VolumeId}}"
+      PropertySelector: "$.VolumeStatuses[0].VolumeStatus.Status"
+      DesiredValues:
+      - ok
+  - name: expandFileSystem
+    action: 'aws:runCommand'
+    inputs:
+      Comment: Expanding File System
+      DocumentName: AWS-RunShellScript
+      InstanceIds:
+        - '{{InstanceId}}'
+      Parameters:
+        commands:
+          - sudo xfs_growfs -d /iris/jrnl/pri

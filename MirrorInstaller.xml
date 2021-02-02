@@ -141,5 +141,20 @@
    Quit ##class(%Installer.Manifest).%Generate(%compiledclass,%code, "ShardInstall")
 ]]></Implementation>
 </Method>
+
+<Method name="SetConfig">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[globals8kb:%Integer]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  write !, "Setting global buffers to ",globals8kb,!
+  s sc=##Class(Config.config).Get(.prop)
+  s prop("globals8kb")=globals8kb
+  s sc=##Class(Config.config).Modify(.prop)
+  if 'sc do $system.OBJ.DisplayError(sc)  
+  quit sc
+]]></Implementation>
+</Method>
+
 </Class>
 </Export>
